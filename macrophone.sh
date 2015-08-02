@@ -4,7 +4,7 @@
 # Note:			Used a custom associative array implementation since Bash v3 doesn't have
 #				one by default, and it appears that's what Macs are shipped with.
 #				KEY=${ARRAY%%=*}
-#	    		VALUE=${ARRAY#*=}
+#				VALUE=${ARRAY#*=}
 
 # set config file location and settings parameters
 CONFIG="/tmp/.macrophone_config"
