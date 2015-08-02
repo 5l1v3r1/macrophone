@@ -21,13 +21,13 @@ When prompted to select a song, artist, or voice, enter your choice followed by 
 
 Your most recent selections are saved in `/tmp/.macrophone_config`. For example, simply hitting "Enter" after each of the following lines:
 
-	Enter song [wrecking ball]: 
-	Enter artist [miley cyrus]: 
-	Enter voice (for a list of voices, type help) [alex]:
+	Enter song [Wrecking Ball]:  
+	Enter artist [Miley Cyrus]:  
+	Enter voice (for a list of voices, type help) [Alex]:
 	
 will tell your computer to use those settings. You should then see:
 
-	Now singing wrecking ball by miley cyrus in the voice of alex (hit ctrl+c to cancel)...
+	Now singing Wrecking Ball by Miley Cyrus in the voice of Alex (hit ctrl+c to cancel)...
 	
 #### To-do
 * Search across multiple lyrics sites
