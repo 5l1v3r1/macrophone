@@ -27,7 +27,7 @@ get() {
     if [[ "$#" -gt 1 && $2 = "formatted" && $1 != voice ]]; then
         echo ${SETTINGS[$INDEX]#*=} | sed 's/\ /-/g'
     else
-        echo ${SETTINGS[$INDEX]#*=}
+        echo ${SETTINGS[$INDEX]#*=} | awk '{for(i=1;i<=NF;i++){ $i=toupper(substr($i,1,1)) substr($i,2) }}1'
     fi
     
 }
