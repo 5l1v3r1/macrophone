@@ -1,10 +1,10 @@
 #!/bin/bash
 # Description:  A program to tell your Mac to read (i.e. "sing") a song of your choosing.
-# Author:		Caleb Gross
-# Note:			Used a custom associative array implementation since Bash v3 doesn't have
-#				one by default, and it appears that's what Macs are shipped with.
-#				KEY=${ARRAY%%=*}
-#				VALUE=${ARRAY#*=}
+# Author:	Caleb Gross
+# Note:		Used a custom associative array implementation since Bash v3 doesn't have
+#		one by default, and it appears that's what Macs are shipped with.
+#		KEY=${ARRAY%%=*}
+#		VALUE=${ARRAY#*=}
 
 # set config file location and settings parameters
 CONFIG="/tmp/.macrophone_config"
@@ -19,7 +19,7 @@ SETTINGS=(
 # $2 : formatted (optional)
 get() {
 
-	if 	 [ $1 = song ];   then INDEX=0;
+	if   [ $1 = song ];   then INDEX=0;
 	elif [ $1 = artist ]; then INDEX=1;
 	elif [ $1 = voice ];  then INDEX=2;
 	fi
