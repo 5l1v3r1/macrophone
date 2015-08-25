@@ -32,58 +32,68 @@ get() {
     
 }
 
-# read settings from config file if it already exists
-# otherwise, create a new blank config file
-if [ -f $CONFIG ]
-    then
-    for (( i=0; i<${#SETTINGS[@]}; i++ ))
-    do
-        LINE=$( grep "${SETTINGS[i]}" $CONFIG )
-        VALUE=${LINE#*=}
-        SETTINGS[i]=${SETTINGS[i]}$VALUE
-    done
+if [[ "$#" -eq 3 ]]; then
+    SETTINGS[0]=SONG=$(echo $1 | tr '[:upper:]' '[:lower:]')
+    SETTINGS[1]=ARTIST=$(echo $2 | tr '[:upper:]' '[:lower:]')
+    SETTINGS[2]=VOICE=$(echo $3 | tr '[:upper:]' '[:lower:]')
 else
-    printf '%s\n' "${SETTINGS[@]}" > $CONFIG
-fi
 
-# prompts to be displayed to user
-PROMPTS=(
-    "SONG&Enter song [$(get song)]: "
-    "ARTIST&Enter artist [$(get artist)]: "
-    "VOICE&Enter voice (for a list of voices, type help) [$(get voice)]: "
-    )
+    # read settings from config file if it already exists
+    # otherwise, create a new blank config file
+    if [ -f $CONFIG ]
+        then
+        for (( i=0; i<${#SETTINGS[@]}; i++ ))
+        do
+            LINE=$( grep "${SETTINGS[i]}" $CONFIG )
+            VALUE=${LINE#*=}
+            SETTINGS[i]=${SETTINGS[i]}$VALUE
+        done
+    else
+        printf '%s\n' "${SETTINGS[@]}" > $CONFIG
+    fi
 
-# prompt user for input
-# if they enter a new selection, process it
-# otherwise, use selection from config file
-for (( i=0; i<${#PROMPTS[@]}; i++ ))
-do
-    TYPE=${PROMPTS[i]%%&*}
-    PROMPT=${PROMPTS[i]#*&}
-    echo -n "$PROMPT "
-    read INPUT
-    while [[ $TYPE = "VOICE" && $INPUT = "help" ]]; do
-        say -v ?
+    # prompts to be displayed to user
+    PROMPTS=(
+        "SONG&Enter song [$(get song)]: "
+        "ARTIST&Enter artist [$(get artist)]: "
+        "VOICE&Enter voice (for a list of voices, type help) [$(get voice)]: "
+        )
+
+    # prompt user for input
+    # if they enter a new selection, process it
+    # otherwise, use selection from config file
+    for (( i=0; i<${#PROMPTS[@]}; i++ ))
+    do
+        TYPE=${PROMPTS[i]%%&*}
+        PROMPT=${PROMPTS[i]#*&}
         echo -n "$PROMPT "
         read INPUT
+        while [[ $TYPE = "VOICE" && $INPUT = "help" ]]; do
+            say -v ?
+            echo -n "$PROMPT "
+            read INPUT
+        done
+        if [[ $INPUT != "" ]]
+            then
+            SELECTION=$(echo $INPUT | tr '[:upper:]' '[:lower:]')
+            SETTINGS[i]=$TYPE=$SELECTION
+        fi
     done
-    if [[ $INPUT != "" ]]
-        then
-        SELECTION=$(echo $INPUT | tr '[:upper:]' '[:lower:]')
-        SETTINGS[i]=$TYPE=$SELECTION
-    fi
-done
 
-# save current selections
-printf '%s\n' "${SETTINGS[@]}" > $CONFIG
+    # save current selections
+    printf '%s\n' "${SETTINGS[@]}" > $CONFIG
+
+fi
+
+# printf '%s\n' "${SETTINGS[@]}"
 
 # print feedback to user
 echo "Now singing $(get song) by $(get artist) in the voice of $(get voice) (hit ctrl+c to cancel)..."
 
 # sing selected song
-curl -s http://www.metrolyrics.com/$(get song formatted)-lyrics-$(get artist formatted).html \
-| tr -d '\r\n' \
-| grep -oE '<div id="lyrics-body-text">.*?</div>' \
-| perl -pe 's|<br />| |g' \
-| perl -pe 's|<.*?>||g' \
-| say -v "$(get voice)"
+curl -s http://www.metrolyrics.com/$(get song formatted)-lyrics-$(get artist formatted).html |\
+tr -d '\r\n' |\
+grep -oE '<div id="lyrics-body-text">.*?</div>' |\
+perl -pe 's|<br />| |g' |\
+perl -pe 's|<.*?>||g' |\
+say -v "$(get voice)"
